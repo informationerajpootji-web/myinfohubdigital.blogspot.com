@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>COPA Quiz 2026 - Set 6 (100 नए प्रश्न)</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;700&family=Baloo+2:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#020817;--surface:#0A1628;--surface2:#0F172A;--border:#1E293B;--text:#F1F5F9;--muted:#64748B;--green:#10B981;--red:#EF4444;--blue:#3B82F6;--purple:#8B5CF6;--yellow:#F59E0B;--cyan:#06B6D4;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);min-height:100vh;font-family:'Noto Sans Devanagari',sans-serif;color:var(--text);padding:16px 12px 60px;display:flex;flex-direction:column;align-items:center;gap:14px;background-image:radial-gradient(ellipse at 20% 10%,#0d2a4a33 0%,transparent 60%),radial-gradient(ellipse at 80% 90%,#1a0a2e33 0%,transparent 60%);}
+  .topbar{width:100%;max-width:660px;background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:13px 18px;display:flex;justify-content:space-between;align-items:center;}
+  .topbar-title{font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;font-family:'Baloo 2',sans-serif;}
+  .topbar-sub{font-size:16px;color:var(--text);font-weight:700;font-family:'Baloo 2',sans-serif;}
+  .score-box{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:6px 15px;display:flex;align-items:baseline;gap:3px;}
+  .score-num{color:var(--green);font-size:22px;font-weight:800;font-family:'Baloo 2',sans-serif;}
+  .score-den{color:var(--muted);font-size:14px;}
+  .progress-wrap{width:100%;max-width:660px;height:5px;background:var(--border);border-radius:99px;overflow:hidden;}
+  .progress-bar{height:100%;border-radius:99px;transition:width 0.6s ease;}
+  .card{width:100%;max-width:660px;background:var(--surface);border:2px solid var(--border);border-radius:22px;padding:24px 20px;transition:border-color 0.3s;}
+  .card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+  .pill{font-size:12px;padding:4px 12px;border-radius:99px;font-family:'Baloo 2',sans-serif;font-weight:600;display:inline-block;}
+  .q-num{color:var(--muted);font-size:12px;font-family:'Baloo 2',sans-serif;}
+  .question-text{font-size:17px;line-height:1.7;font-weight:600;color:var(--text);font-family:'Noto Sans Devanagari',sans-serif;}
+  .options{display:flex;flex-direction:column;gap:9px;margin-top:18px;}
+  .opt-btn{display:flex;align-items:center;gap:12px;padding:13px 15px;border-radius:13px;background:#0F172A;border:1px solid var(--border);color:#CBD5E1;cursor:pointer;transition:all 0.25s;text-align:left;width:100%;font-family:'Noto Sans Devanagari',sans-serif;}
+  .opt-btn:hover:not(.answered){background:#1E293B;border-color:#334155;transform:translateY(-1px);}
+  .opt-btn.correct{background:#052E16;border:2px solid var(--green);color:#A7F3D0;}
+  .opt-btn.wrong{background:#2D0A0A;border:2px solid var(--red);color:#FECACA;}
+  .opt-btn.neutral-after{color:#374151;}
+  .opt-label{min-width:30px;height:30px;border-radius:8px;background:#1E293B;color:#64748B;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;font-family:'Baloo 2',sans-serif;flex-shrink:0;transition:all 0.25s;}
+  .opt-btn.correct .opt-label{background:var(--green);color:#fff;}
+  .opt-btn.wrong .opt-label{background:var(--red);color:#fff;}
+  .opt-text{font-size:14px;line-height:1.5;flex:1;}
+  .opt-icon{font-size:18px;flex-shrink:0;}
+  .exp-box{width:100%;max-width:660px;background:var(--surface);border:1px solid #1E3A5F;border-radius:18px;padding:20px 18px;animation:fadeIn 0.4s ease;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  .exp-title{display:flex;align-items:center;gap:8px;margin-bottom:16px;}
+  .exp-title span{color:#38BDF8;font-weight:700;font-size:16px;font-family:'Baloo 2',sans-serif;}
+  .exp-option{margin-bottom:10px;padding:10px 14px;border-radius:11px;background:#0F172A;border:1px solid var(--border);}
+  .exp-option.correct-exp{background:#052E1677;border-color:#10B98144;}
+  .exp-option.wrong-exp{background:#2D0A0A77;border-color:#EF444433;}
+  .exp-option-header{display:flex;gap:9px;align-items:flex-start;}
+  .exp-lbl{min-width:26px;height:26px;border-radius:6px;background:#1E293B;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:1px;font-family:'Baloo 2',sans-serif;}
+  .exp-lbl.correct-lbl{background:var(--green);}
+  .exp-lbl.wrong-lbl{background:var(--red);}
+  .exp-opt-name{font-size:13px;font-weight:600;color:#64748B;}
+  .exp-opt-name.correct-name{color:#6EE7B7;}
+  .exp-opt-name.wrong-name{color:#FCA5A5;}
+  .exp-opt-text{font-size:13px;color:#94A3B8;margin-top:3px;line-height:1.6;}
+  .ai-exp{margin-top:14px;padding:13px 15px;background:#0C1929;border-radius:11px;border:1px solid #1E3A5F;}
+  .ai-exp-title{color:#38BDF8;font-size:13px;font-weight:600;margin-bottom:8px;font-family:'Baloo 2',sans-serif;}
+  .ai-exp-text{color:#94A3B8;font-size:13px;line-height:1.7;white-space:pre-wrap;}
+  .loader{display:flex;align-items:center;gap:8px;}
+  .dot{width:9px;height:9px;background:#38BDF8;border-radius:50%;animation:pulse 1.2s infinite;}
+  .dot:nth-child(2){animation-delay:.2s}.dot:nth-child(3){animation-delay:.4s}
+  @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.7)}}
+  .loading-text{color:#64748B;font-size:13px;font-family:'Baloo 2',sans-serif;}
+  .btn-next{width:100%;max-width:660px;background:linear-gradient(135deg,#EF4444,#F59E0B);color:#fff;border:none;padding:15px 28px;border-radius:14px;font-size:17px;font-weight:700;font-family:'Baloo 2',sans-serif;cursor:pointer;transition:all 0.2s;animation:fadeIn 0.3s ease;}
+  .btn-next:hover{transform:translateY(-2px);box-shadow:0 8px 24px #EF444444;}
+  .result-screen{width:100%;max-width:520px;background:var(--surface2);border:1px solid var(--border);border-radius:24px;padding:36px 28px;display:flex;flex-direction:column;align-items:center;text-align:center;}
+  .result-emoji{font-size:60px;margin-bottom:10px;}
+  .result-title{font-size:26px;font-weight:800;font-family:'Baloo 2',sans-serif;color:var(--text);margin-bottom:6px;}
+  .score-big{font-size:84px;font-weight:800;font-family:'Baloo 2',sans-serif;color:var(--text);line-height:1;margin-bottom:10px;}
+  .score-big span{font-size:24px;color:var(--muted);}
+  .result-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:16px;}
+  .btn-restart{background:linear-gradient(135deg,#EF4444,#F59E0B);color:#fff;border:none;padding:13px 24px;border-radius:12px;font-size:15px;font-weight:700;font-family:'Baloo 2',sans-serif;cursor:pointer;transition:all 0.2s;}
+  .btn-review{background:var(--surface);color:var(--text);border:1px solid var(--border);padding:13px 24px;border-radius:12px;font-size:15px;font-weight:700;font-family:'Baloo 2',sans-serif;cursor:pointer;transition:all 0.2s;}
+  .btn-restart:hover,.btn-review:hover{transform:translateY(-1px);}
+  .review-list{margin-top:20px;width:100%;max-height:300px;overflow-y:auto;text-align:left;}
+  .review-item{display:flex;gap:9px;padding:8px 0;border-bottom:1px solid var(--border);align-items:flex-start;}
+  .review-icon{font-size:15px;flex-shrink:0;margin-top:1px;}
+  .review-text{font-size:13px;color:#94A3B8;line-height:1.5;font-family:'Noto Sans Devanagari',sans-serif;}
+  .review-correct{color:var(--red);font-size:12px;display:block;margin-top:2px;}
+  .start-screen{width:100%;max-width:660px;background:var(--surface);border:1px solid var(--border);border-radius:22px;padding:36px 24px;text-align:center;}
+  .start-title{font-size:26px;font-weight:800;font-family:'Baloo 2',sans-serif;color:var(--text);margin-bottom:8px;}
+  .start-sub{font-size:14px;color:var(--muted);margin-bottom:24px;line-height:1.7;}
+  .start-features{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:28px;}
+  .feature-chip{background:#1E293B;border:1px solid var(--border);border-radius:99px;padding:6px 14px;font-size:13px;color:#94A3B8;font-family:'Baloo 2',sans-serif;}
+  .btn-start{background:linear-gradient(135deg,#EF4444,#F59E0B);color:#fff;border:none;padding:16px 40px;border-radius:14px;font-size:18px;font-weight:800;font-family:'Baloo 2',sans-serif;cursor:pointer;transition:all 0.2s;box-shadow:0 4px 20px #EF444433;}
+  .btn-start:hover{transform:translateY(-2px);box-shadow:0 8px 30px #EF444444;}
+  ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:#0F172A}::-webkit-scrollbar-thumb{background:#334155;border-radius:2px}
+</style>
+</head>
+<body>
+
+<div class="start-screen" id="startScreen">
+  <div style="font-size:50px;margin-bottom:12px;">🔥</div>
+  <div class="start-title">COPA परीक्षा Quiz 2026</div>
+  <div style="font-size:13px;color:#F59E0B;margin-bottom:6px;font-family:'Baloo 2',sans-serif;">Set 6 — 100 और नए प्रश्न</div>
+  <div class="start-sub">Training Officer Paper Code 06<br>सिलेबस के अनुसार 100 नए महत्वपूर्ण प्रश्न</div>
+  <div class="start-features">
+    <span class="feature-chip">✅ सही = हरा</span>
+    <span class="feature-chip">❌ गलत = लाल</span>
+    <span class="feature-chip">📖 चारों विकल्पों की व्याख्या</span>
+    <span class="feature-chip">🌐 AI व्याख्या</span>
+    <span class="feature-chip">100 प्रश्न</span>
+    <span class="feature-chip">13 विषय</span>
+  </div>
+  <button class="btn-start" onclick="startQuiz()">▶ Quiz शुरू करें</button>
+</div>
+
+<div id="quizScreen" style="display:none;width:100%;flex-direction:column;align-items:center;gap:14px;">
+  <div class="topbar">
+    <div>
+      <div class="topbar-title">COPA परीक्षा 2026 — Set 6</div>
+      <div class="topbar-sub">Training Officer</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <span style="color:var(--muted);font-size:12px;font-family:'Baloo 2',sans-serif;">प्रश्न</span>
+      <span id="qCounter" style="color:var(--text);font-size:14px;font-weight:700;font-family:'Baloo 2',sans-serif;">1/100</span>
+    </div>
+    <div class="score-box"><span class="score-num" id="scoreDisplay">0</span><span class="score-den">/100</span></div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="progressBar" style="width:0%;"></div></div>
+  <div class="card" id="mainCard">
+    <div class="card-header">
+      <span class="pill" id="sectionPill"></span>
+      <span class="q-num" id="qNumBadge">Q1 of 100</span>
+    </div>
+    <div class="question-text" id="questionText"></div>
+    <div class="options" id="optionsContainer"></div>
+  </div>
+  <div class="exp-box" id="expBox" style="display:none;">
+    <div class="exp-title"><span>📚 चारों विकल्पों की व्याख्या</span></div>
+    <div id="localExplanations"></div>
+    <div class="ai-exp" id="aiExpBox" style="display:none;">
+      <div class="ai-exp-title">🌐 AI विस्तृत व्याख्या</div>
+      <div class="loader" id="aiLoader"><div class="dot"></div><div class="dot"></div><div class="dot"></div><span class="loading-text">लोड हो रही है...</span></div>
+      <div class="ai-exp-text" id="aiExpText" style="display:none;"></div>
+    </div>
+  </div>
+  <button class="btn-next" id="nextBtn" style="display:none;" onclick="nextQuestion()">अगला प्रश्न →</button>
+</div>
+
+<div class="result-screen" id="resultScreen" style="display:none;">
+  <div class="result-emoji" id="resultEmoji">🎉</div>
+  <div class="result-title">COPA Quiz परिणाम — Set 6</div>
+  <div class="score-big" id="resultScore">0<span>/100</span></div>
+  <div class="pill" id="resultGrade" style="font-size:18px;font-weight:700;margin-bottom:20px;"></div>
+  <div class="result-btns">
+    <button class="btn-restart" onclick="restartQuiz()">🔄 दोबारा खेलें</button>
+    <button class="btn-review" onclick="toggleReview()">📊 समीक्षा देखें</button>
+  </div>
+  <div class="review-list" id="reviewList" style="display:none;"></div>
+</div>
+
+<script>
+const QUESTIONS = [
+
+  // ===== ऑपरेटिंग सिस्टम (1–8) =====
+  {id:1,section:"ऑपरेटिंग सिस्टम",color:"#3B82F6",
+   q:"Motherboard पर कौन सा component CPU को power regulate करके देता है?",
+   opts:["RAM slot","VRM (Voltage Regulator Module)","USB port","SATA port"],ans:1,
+   exp:["RAM slot — Memory के लिए है।","✅ VRM (Voltage Regulator Module) — Motherboard का हिस्सा जो PSU की power को CPU के लिए exact voltage में convert करता है।","USB port — Peripherals के लिए।","SATA port — Storage drives के लिए।"]},
+
+  {id:2,section:"ऑपरेटिंग सिस्टम",color:"#3B82F6",
+   q:"Windows में 'Pagefile.sys' क्या है?",
+   opts:["System configuration file","Virtual memory के लिए hard disk पर बनी file","User document","Virus file"],ans:1,
+   exp:["System config — config.sys अलग है।","✅ Pagefile.sys — Windows की virtual memory file। RAM कम पड़ने पर data यहाँ temporarily store होता है।","User document — Documents folder में होते हैं।","Virus file — System file है।"]},
+
+  {id:3,section:"ऑपरेटिंग सिस्टम",color:"#3B82F6",
+   q:"Linux में 'grep' command किसलिए use होता है?",
+   opts:["Files copy करने के लिए","Files या output में pattern/text search करने के लिए","Disk space देखने के लिए","Network check करने के लिए"],ans:1,
+   exp:["Files copy — cp command से।","✅ grep — Text pattern search करता है। जैसे grep 'error' logfile.txt — file में 'error' word वाली lines दिखाता है।","Disk space — df command से।","Network check — ping/ifconfig से।"]},
+
+  {id:4,section:"ऑपरेटिंग सिस्टम",color:"#3B82F6",
+   q:"Interrupt क्या होता है?",
+   opts:["Program delete करना","Hardware/software से CPU को signal — तुरंत attention चाहिए","Memory erase करना","Screen off करना"],ans:1,
+   exp:["Program delete — Uninstall से।","✅ Interrupt — Hardware (keyboard press, timer) या software से CPU को signal मिलता है कि current task रोको और interrupt handler run करो।","Memory erase — Format से।","Screen off — Power settings से।"]},
+
+  {id:5,section:"ऑपरेटिंग सिस्टम",color:"#3B82F6",
+   q:"Linux में 'sudo' command किसलिए use होता है?",
+   opts:["Files delete करने के लिए","Superuser/root privileges से command execute करने के लिए","Network connect करने के लिए","Files copy करने के लिए"],ans:1,
+   exp:["Files delete — rm से।","✅ sudo (Superuser Do) — Regular user को temporarily administrator/root permissions से command run करने देता है।","Network connect — Network manager से।","Files copy — cp से।"]},
+
+  {id:6,section:"ऑपरेटिंग सिस्टम",color:"#3B82F6",
+   q:"Windows में 'regedit' command क्या खोलता है?",
+   opts:["Task Manager","Windows Registry Editor","Disk Management","Device Manager"],ans:1,
+   exp:["Task Manager — taskmgr से।","✅ regedit — Windows Registry Editor खुलता है जहाँ OS और software settings का central database edit होता है।","Disk Management — diskmgmt.msc से।","Device Manager — devmgmt.msc से।"]},
+
+  {id:7,section:"ऑपरेटिंग सिस्टम",color:"#3B82F6",
+   q:"Pipeline का OS में क्या मतलब है?",
+   opts:["Water pipe","एक command का output दूसरे command का input बनाना","Network cable","Power cable"],ans:1,
+   exp:["Water pipe — Metaphor है।","✅ Pipeline (|) — Linux/Unix में। जैसे ls | grep '.txt' — ls का output grep को मिलता है। Chaining commands।","Network cable — Ethernet cable है।","Power cable — Power supply है।"]},
+
+  {id:8,section:"ऑपरेटिंग सiस्टम",color:"#3B82F6",
+   q:"OS में 'Deadlock' कब होता है?",
+   opts:["System fast चलने पर","दो या अधिक processes एक-दूसरे के resources का इंतजार करते हैं — कोई आगे नहीं बढ़ पाता","RAM full होने पर","Internet disconnect होने पर"],ans:1,
+   exp:["System fast — Normal operation।","✅ Deadlock — Process A के पास Resource 1 है और Resource 2 का इंतजार है। Process B के पास Resource 2 है और Resource 1 का। दोनों stuck।","RAM full — Memory pressure होती है।","Internet disconnect — Network error।"]},
+
+  // ===== MS WORD (9–16) =====
+  {id:9,section:"MS Word",color:"#8B5CF6",
+   q:"Word में 'Hyphenation' किसलिए use होती है?",
+   opts:["Minus sign के लिए","Long words को line के end पर hyphen से break करने के लिए better text flow","Bullet points के लिए","Border के लिए"],ans:1,
+   exp:["Minus sign — Keyboard से।","✅ Hyphenation — Justified text में बड़े gaps avoid करने के लिए long words को hyphen (-) से break करता है। Layout > Hyphenation।","Bullet points — Home > Bullets से।","Border — Design > Page Borders से।"]},
+
+  {id:10,section:"MS Word",color:"#8B5CF6",
+   q:"Word में 'Field Codes' किसलिए use होते हैं?",
+   opts:["Passwords के लिए","Dynamic content जैसे date, page number, author automatically insert करने के लिए","Coding के लिए","Games के लिए"],ans:1,
+   exp:["Passwords — File protection से।","✅ Field Codes — Curly braces में special instructions जो dynamic content insert करते हैं। जैसे {DATE}, {PAGE}, {AUTHOR}। Ctrl+F9 से insert।","Coding — Visual Studio जैसे IDE से।","Games — अलग software।"]},
+
+  {id:11,section:"MS Word",color:"#8B5CF6",
+   q:"Word में 'Bookmarks' किसलिए use होते हैं?",
+   opts:["Internet bookmarks के लिए","Document में specific locations को name देकर quickly navigate करने के लिए","Images save करने के लिए","Passwords के लिए"],ans:1,
+   exp:["Internet bookmarks — Browser में।","✅ Bookmarks — Document के specific sections को name देते हैं। Insert > Bookmark। Cross-references और hyperlinks में use होते हैं।","Images save — Save As से।","Passwords — Protect Document से।"]},
+
+  {id:12,section:"MS Word",color:"#8B5CF6",
+   q:"Word में 'Cross-reference' किसलिए use होता है?",
+   opts:["Internet links के लिए","Document के अंदर ही किसी अन्य heading, figure, या bookmark को refer करने के लिए","External files के लिए","Email के लिए"],ans:1,
+   exp:["Internet links — Hyperlink से।","✅ Cross-reference — 'देखें Section 3' जैसे internal references। Source change होने पर automatically update। Insert > Cross-reference।","External files — Hyperlink से।","Email — mailto: link से।"]},
+
+  {id:13,section:"MS Word",color:"#8B5CF6",
+   q:"Word में 'Master Document' किसलिए use होता है?",
+   opts:["Main document","Multiple subdocuments को एक बड़े document की तरह manage करने के लिए","Password protected document","Template document"],ans:1,
+   exp:["Main document — Master document है लेकिन special purpose है।","✅ Master Document — बड़ी book/thesis को chapters (subdocuments) में divide करके manage करता है। एक साथ print, index, TOC बन सकती है।","Password — Protect Document से।","Template — .dotx extension से।"]},
+
+  {id:14,section:"MS Word",color:"#8B5CF6",
+   q:"Word में 'Line Numbers' किसलिए add होते हैं?",
+   opts:["Page number के लिए","Legal documents और code में specific lines quickly reference करने के लिए","Word count के लिए","Character count के लिए"],ans:1,
+   exp:["Page number — Insert > Page Number से।","✅ Line Numbers — Layout > Line Numbers। Legal drafts, scripts, programming books में specific lines refer करने के लिए।","Word count — Status bar में।","Character count — Status bar में।"]},
+
+  {id:15,section:"MS Word",color:"#8B5CF6",
+   q:"Word में 'Concordance File' किसलिए use होती है?",
+   opts:["Spelling check के लिए","Automatic Index बनाने के लिए — words की list से","Grammar check के लिए","Table of contents के लिए"],ans:1,
+   exp:["Spelling check — F7 से।","✅ Concordance File — Words की list वाली file। Word इसे use करके automatically index entry marks लगाता है। References > Insert Index।","Grammar check — F7 से।","TOC — References > TOC से।"]},
+
+  {id:16,section:"MS Word",color:"#8B5CF6",
+   q:"Word में OLE (Object Linking and Embedding) क्या है?",
+   opts:["Online editing","दूसरे application की object (Excel chart) को Word में insert और link करने की technology","Email भेजना","PDF बनाना"],ans:1,
+   exp:["Online editing — Web-based editing अलग है।","✅ OLE — Excel spreadsheet या chart को Word में insert करना। Linked हो तो source बदलने पर Word में भी update। Insert > Object से।","Email — Outlook से।","PDF — Save As PDF से।"]},
+
+  // ===== MS EXCEL (17–26) =====
+  {id:17,section:"MS Excel",color:"#10B981",
+   q:"Excel में 'Array Constant' क्या है?",
+   opts:["Fixed cell reference","Curly braces में directly लिखी values का set — formula के अंदर","Named range","Pivot table"],ans:1,
+   exp:["Fixed cell reference — $A$1 है।","✅ Array Constant — Formula में directly लिखी values। जैसे {1,2,3} row array, {1;2;3} column array। Cell reference की जगह use होती है।","Named range — Name Manager से।","Pivot table — Insert से।"]},
+
+  {id:18,section:"MS Excel",color:"#10B981",
+   q:"Excel में WEEKDAY function क्या return करता है?",
+   opts:["Week number","Date का day of week (1=Sunday, 2=Monday...)","Month number","Year number"],ans:1,
+   exp:["Week number — WEEKNUM() से।","✅ WEEKDAY(date, return_type) — Date के लिए day number return करता है। Default में 1=Sunday, 7=Saturday।","Month number — MONTH() से।","Year number — YEAR() से।"]},
+
+  {id:19,section:"MS Excel",color:"#10B981",
+   q:"Excel में 'Evaluate Formula' tool किसलिए use होता है?",
+   opts:["Formula delete करने के लिए","Complex formula को step-by-step evaluate करके debug करने के लिए","Formula copy करने के लिए","Chart बनाने के लिए"],ans:1,
+   exp:["Formula delete — Delete से।","✅ Evaluate Formula (Formulas > Evaluate Formula) — Complex nested formula को एक-एक step में evaluate करता है। Debugging के लिए excellent।","Formula copy — Ctrl+C से।","Chart — Insert से।"]},
+
+  {id:20,section:"MS Excel",color:"#10B981",
+   q:"Excel में IFERROR के साथ VLOOKUP use करने का क्या फायदा है?",
+   opts:["Speed बढ़ती है","VLOOKUP से error आने पर friendly message दिखाना","Data sort होता है","Chart बनता है"],ans:1,
+   exp:["Speed — IFERROR speed नहीं बढ़ाता।","✅ =IFERROR(VLOOKUP(...),'Not Found') — VLOOKUP value न मिले तो #N/A error की जगह custom message जैसे 'Not Found' दिखता है।","Data sort — Sort feature से।","Chart — Insert से।"]},
+
+  {id:21,section:"MS Excel",color:"#10B981",
+   q:"Excel में 'GETPIVOTDATA' automatically कब insert होता है?",
+   opts:["जब table बनाते हैं","जब Pivot Table cell को formula में directly click करते हैं","जब chart बनाते हैं","जब macro run करते हैं"],ans:1,
+   exp:["Table बनाना — Ctrl+T से।","✅ GETPIVOTDATA — Pivot Table के बाहर किसी cell में = लिखकर Pivot Table की cell click करने पर automatically insert होता है।","Chart बनाना — Insert से।","Macro — Developer tab से।"]},
+
+  {id:22,section:"MS Excel",color:"#10B981",
+   q:"Excel में 'Watch Window' में कितनी cells monitor कर सकते हैं?",
+   opts:["सिर्फ 1","सिर्फ 10","Unlimited — जितनी चाहें","सिर्फ 5"],ans:2,
+   exp:["सिर्फ 1 — Multiple cells monitor होती हैं।","सिर्फ 10 — कोई limit नहीं।","✅ Watch Window — Multiple cells को add कर सकते हैं। Different sheets की cells भी। Formulas > Watch Window।","सिर्फ 5 — कोई limit नहीं।"]},
+
+  {id:23,section:"MS Excel",color:"#10B981",
+   q:"Excel में 'Trace Precedents' किसलिए use होता है?",
+   opts:["Chart trace करने के लिए","किसी formula cell को feed करने वाली cells को arrows से दिखाना","Data trace करने के लिए","Error trace करने के लिए"],ans:1,
+   exp:["Chart trace — Chart tools अलग।","✅ Trace Precedents (Formulas > Trace Precedents) — Selected formula cell में कौन सी cells input के रूप में जाती हैं, arrows दिखाता है।","Data trace — Data tools अलग।","Error trace — Error Checking अलग।"]},
+
+  {id:24,section:"MS Excel",color:"#10B981",
+   q:"Excel में LARGE और SMALL functions क्या करते हैं?",
+   opts:["Font size change करते हैं","Nth largest या Nth smallest value return करते हैं","Data delete करते हैं","Data sort करते हैं"],ans:1,
+   exp:["Font size — Format cells से।","✅ LARGE(array,k) — kth largest value। SMALL(array,k) — kth smallest value। जैसे =LARGE(A1:A10,2) — दूसरी सबसे बड़ी value।","Data delete — Delete से।","Data sort — Sort feature से।"]},
+
+  {id:25,section:"MS Excel",color:"#10B981",
+   q:"Excel में 'Power View' किसलिए use होता है?",
+   opts:["Power save करने के लिए","Interactive data visualization reports बनाने के लिए","Macro run करने के लिए","Data import करने के लिए"],ans:1,
+   exp:["Power save — Battery settings से।","✅ Power View — Excel add-in। Interactive charts, maps, और visualizations बनाने के लिए। Microsoft 365 में Power BI ने replace किया।","Macro — Developer tab से।","Data import — Power Query से।"]},
+
+  {id:26,section:"MS Excel",color:"#10B981",
+   q:"Excel में FIND और SEARCH functions में क्या अंतर है?",
+   opts:["कोई अंतर नहीं","FIND case-sensitive है, SEARCH case-insensitive और wildcards support करता है","SEARCH faster है","FIND wildcards support करता है"],ans:1,
+   exp:["कोई अंतर नहीं — अंतर है।","✅ FIND — Case-sensitive, no wildcards। SEARCH — Case-insensitive, wildcards (*, ?) support करता है।","SEARCH faster — Speed difference नहीं।","FIND wildcards — FIND wildcards नहीं करता।"]},
+
+  // ===== POWERPOINT (27–32) =====
+  {id:27,section:"PowerPoint",color:"#F59E0B",
+   q:"PowerPoint में 'Merge Shapes' feature किसलिए use होता है?",
+   opts:["Slides merge करने के लिए","Multiple shapes को combine, subtract, या intersect करके custom shapes बनाने के लिए","Text merge करने के लिए","Images merge करने के लिए"],ans:1,
+   exp:["Slides merge — Slides Copy-Paste से।","✅ Merge Shapes (Drawing Tools > Merge Shapes) — Union, Combine, Fragment, Intersect, Subtract से custom shapes बनाते हैं।","Text merge — Mail Merge अलग।","Images merge — Image editor से।"]},
+
+  {id:28,section:"PowerPoint",color:"#F59E0B",
+   q:"PowerPoint में 'Design Ideas' feature क्या करता है?",
+   opts:["Slide delete करता है","AI से automatic slide design suggestions देता है","Text translate करता है","Video add करता है"],ans:1,
+   exp:["Slide delete — Right-click से।","✅ Design Ideas (Designer) — Microsoft 365 में AI automatically content के basis पर professional design layouts suggest करता है।","Text translate — Review > Translate से।","Video add — Insert > Video से।"]},
+
+  {id:29,section:"PowerPoint",color:"#F59E0B",
+   q:"PowerPoint में 'Photo Album' feature किसलिए use होता है?",
+   opts:["Photos delete करने के लिए","Multiple images से quickly photo album presentation बनाने के लिए","Photos edit करने के लिए","Photos compress करने के लिए"],ans:1,
+   exp:["Photos delete — Delete से।","✅ Photo Album (Insert > Photo Album) — Multiple images select करके automatically presentation बन जाती है। Layout, captions, frame styles customize होते हैं।","Photos edit — Picture Tools से।","Photos compress — Compress Pictures से।"]},
+
+  {id:30,section:"PowerPoint",color:"#F59E0B",
+   q:"PowerPoint में 'Slide Sorter' view किसलिए useful है?",
+   opts:["Slides edit करने के लिए","सभी slides को thumbnail view में देखकर reorder, delete, duplicate करने के लिए","Animations देखने के लिए","Notes add करने के लिए"],ans:1,
+   exp:["Slides edit — Normal view में।","✅ Slide Sorter View — सभी slides एक साथ thumbnail में दिखती हैं। Drag-drop से reorder, Ctrl+D से duplicate, Delete से remove।","Animations — Animation Pane से।","Notes — Notes Pane से।"]},
+
+  {id:31,section:"PowerPoint",color:"#F59E0B",
+   q:"PowerPoint में 'Custom Slide Show' किसलिए use होता है?",
+   opts:["नई slide बनाने के लिए","Same presentation से different audiences के लिए different slide sets define करने के लिए","Slide color बदलने के लिए","Animation add करने के लिए"],ans:1,
+   exp:["नई slide — Ctrl+M से।","✅ Custom Slide Show — एक presentation में multiple custom shows define होते हैं। Different clients को अलग slides show करने के लिए।","Slide color — Design tab से।","Animation — Animations tab से।"]},
+
+  {id:32,section:"PowerPoint",color:"#F59E0B",
+   q:"PowerPoint में Equation किस tab से insert होती है?",
+   opts:["Home tab","Design tab","Insert tab","Animations tab"],ans:2,
+   exp:["Home tab — Text formatting।","Design tab — Slide design।","✅ Insert tab — Insert > Equation से mathematical equations insert होती हैं।","Animations tab — Slide animations।"]},
+
+  // ===== DATABASE & MySQL (33–42) =====
+  {id:33,section:"Database & MySQL",color:"#EF4444",
+   q:"MySQL में REPLACE INTO क्या करता है?",
+   opts:["Data search करता है","Row exist करे तो delete+insert करता है, न हो तो insert","Data sort करता है","Table rename करता है"],ans:1,
+   exp:["Data search — SELECT से।","✅ REPLACE INTO — Primary/unique key पर row exist हो तो delete करके नई insert। न हो तो directly insert। INSERT या UPDATE का combination।","Data sort — ORDER BY से।","Table rename — RENAME TABLE से।"]},
+
+  {id:34,section:"Database & MySQL",color:"#EF4444",
+   q:"Database में 'Cursor' क्या है?",
+   opts:["Mouse cursor","Stored procedure में result set को row-by-row process करने की mechanism","Table pointer","Index pointer"],ans:1,
+   exp:["Mouse cursor — UI element है।","✅ Cursor — SQL में result set की rows को एक-एक करके process करने के लिए। Stored procedures में use होता है।","Table pointer — Physical storage concept।","Index pointer — B-tree index structure।"]},
+
+  {id:35,section:"Database & MySQL",color:"#EF4444",
+   q:"MySQL में UNION और UNION ALL में क्या अंतर है?",
+   opts:["कोई अंतर नहीं","UNION duplicate rows remove करता है, UNION ALL सभी rows रखता है","UNION ALL faster है always","UNION ALL duplicate remove करता है"],ans:1,
+   exp:["कोई अंतर नहीं — अंतर है।","✅ UNION — Duplicate rows remove करता है (extra processing)। UNION ALL — सभी rows रखता है including duplicates। UNION ALL faster होता है।","UNION ALL faster — हाँ यह सही है भी।","UNION ALL duplicate — UNION ALL duplicates रखता है।"]},
+
+  {id:36,section:"Database & MySQL",color:"#EF4444",
+   q:"Database में 'Schema' क्या है?",
+   opts:["Data का backup","Database की logical structure — tables, columns, relationships, constraints का blueprint","User list","Query log"],ans:1,
+   exp:["Data backup — Backup अलग है।","✅ Schema — Database का structural blueprint। Tables, columns, data types, primary/foreign keys, constraints — सब schema में define होते हैं।","User list — User management अलग।","Query log — Audit log अलग।"]},
+
+  {id:37,section:"Database & MySQL",color:"#EF4444",
+   q:"MySQL में FULLTEXT Search किसलिए use होती है?",
+   opts:["Number search के लिए","Text columns में natural language keyword searching के लिए","Date search के लिए","Binary search के लिए"],ans:1,
+   exp:["Number search — WHERE clause से।","✅ FULLTEXT — Large text में natural language search। MATCH(col) AGAINST('keyword') syntax। LIKE से ज्यादा powerful और fast।","Date search — WHERE date BETWEEN से।","Binary — Binary search algorithms अलग।"]},
+
+  {id:38,section:"Database & MySQL",color:"#EF4444",
+   q:"SQL में SELF JOIN किसलिए use होता है?",
+   opts:["Two tables join करने के लिए","Table को खुद से join करने के लिए — hierarchical data (manager-employee) के लिए","Three tables join करने के लिए","Database join करने के लिए"],ans:1,
+   exp:["Two tables — Regular JOIN से।","✅ SELF JOIN — एक table को alias देकर खुद से join। जैसे Employee table में manager_id column जो उसी table की employee_id refer करे।","Three tables — Multiple JOINs से।","Database join — UNION से।"]},
+
+  {id:39,section:"Database & MySQL",color:"#EF4444",
+   q:"MySQL में JSON data type किसलिए use होता है?",
+   opts:["Number store करने के लिए","JSON format data natively store और query करने के लिए","Images store करने के लिए","Text store करने के लिए"],ans:1,
+   exp:["Number — INT से।","✅ JSON data type (MySQL 5.7+) — JSON data validate होकर optimized format में store होता है। JSON_EXTRACT, -> operator से query होता है।","Images — BLOB से।","Text — VARCHAR/TEXT से।"]},
+
+  {id:40,section:"Database & MySQL",color:"#EF4444",
+   q:"Database Partitioning किसलिए use होती है?",
+   opts:["Data encrypt करने के लिए","Large tables को smaller physical pieces में divide करके performance improve करने के लिए","Users divide करने के लिए","Backup के लिए"],ans:1,
+   exp:["Data encrypt — Encryption tools से।","✅ Partitioning — Large table को date/range/hash/list basis पर smaller partitions में divide। Queries only relevant partition scan करती हैं।","Users divide — User management से।","Backup — Backup tools से।"]},
+
+  {id:41,section:"Database & MySQL",color:"#EF4444",
+   q:"MySQL में PREPARE statement किसलिए use होता है?",
+   opts:["Data prepare करने के लिए","Parameterized queries — SQL injection prevent और repeated execution efficient बनाने के लिए","Table prepare करने के लिए","User prepare करने के लिए"],ans:1,
+   exp:["Data prepare — INSERT से।","✅ PREPARE stmt FROM query — Parameterized queries। ? placeholder से values bind होती हैं। SQL injection prevent और repeated execution में performance।","Table prepare — CREATE TABLE से।","User prepare — CREATE USER से।"]},
+
+  {id:42,section:"Database & MySQL",color:"#EF4444",
+   q:"CAP Theorem में C, A, P क्या stand करते हैं?",
+   opts:["Copy, Add, Process","Consistency, Availability, Partition Tolerance","Create, Access, Protect","Cache, Apply, Process"],ans:1,
+   exp:["Copy, Add, Process — गलत है।","✅ CAP Theorem — Distributed systems में तीनों simultaneously possible नहीं: Consistency (सभी nodes same data), Availability (हमेशा respond), Partition Tolerance (network failure पर भी काम)।","Create, Access, Protect — गलत है।","Cache, Apply, Process — गलत है।"]},
+
+  // ===== INTERNET & EMAIL (43–50) =====
+  {id:43,section:"Internet & Email",color:"#06B6D4",
+   q:"API का पूरा नाम है:",
+   opts:["Application Programming Interface","Application Process Interface","Automated Programming Interface","Application Protocol Interface"],ans:0,
+   exp:["✅ API = Application Programming Interface। दो applications के बीच communication का defined way। जैसे Weather API, Payment API।","Application Process Interface — P Programming है।","Automated — A Application है।","Application Protocol Interface — I Interface है।"]},
+
+  {id:44,section:"Internet & Email",color:"#06B6D4",
+   q:"REST API में HTTP methods में POST क्या करता है?",
+   opts:["Data read करता है","नया resource create करता है","Data delete करता है","Data update करता है"],ans:1,
+   exp:["Data read — GET method से।","✅ POST — नया resource create करता है। जैसे नया user, नया order create करना।","Data delete — DELETE method से।","Data update — PUT/PATCH method से।"]},
+
+  {id:45,section:"Internet & Email",color:"#06B6D4",
+   q:"Latency और Bandwidth में क्या अंतर है?",
+   opts:["कोई अंतर नहीं","Latency = data travel time (ms), Bandwidth = data transfer rate (Mbps)","Bandwidth = delay","Latency = speed"],ans:1,
+   exp:["कोई अंतर नहीं — अंतर है।","✅ Latency — Data को source से destination तक जाने में लगा time (milliseconds)। Bandwidth — Per second कितना data transfer हो सकता है (Mbps/Gbps)।","Bandwidth = delay — Bandwidth capacity है।","Latency = speed — Latency delay है।"]},
+
+  {id:46,section:"Internet & Email",color:"#06B6D4",
+   q:"DKIM email security में क्या करता है?",
+   opts:["Email block करता है","Digital signature से email की authenticity verify करता है","Spam delete करता है","Email encrypt करता है"],ans:1,
+   exp:["Email block — Spam filter से।","✅ DKIM (DomainKeys Identified Mail) — Email में digital signature attach होती है। Receiver verify करता है कि email genuine sender से आई है, modify नहीं हुई।","Spam delete — Spam filter से।","Email encrypt — S/MIME, PGP से।"]},
+
+  {id:47,section:"Internet & Email",color:"#06B6D4",
+   q:"Traceroute command किसलिए use होता है?",
+   opts:["Files trace करने के लिए","Data packets के network path (hops) को trace करने के लिए","User trace करने के लिए","Virus trace करने के लिए"],ans:1,
+   exp:["Files trace — File system commands से।","✅ Traceroute (tracert Windows में) — Source से destination तक data किन-किन routers से होकर जाता है और हर hop पर latency दिखाता है।","User trace — Authentication logs से।","Virus trace — Antivirus से।"]},
+
+  {id:48,section:"Internet & Email",color:"#06B6D4",
+   q:"Content Spoofing क्या है?",
+   opts:["Original content बनाना","Website के content को fake/malicious content से replace करके users को deceive करना","Content copy करना","Content delete करना"],ans:1,
+   exp:["Original content — Legitimate creation।","✅ Content Spoofing — Attacker website content manipulate करके users को false information दिखाता है या malicious actions करवाता है।","Content copy — Copyright violation।","Content delete — Defacement attack।"]},
+
+  {id:49,section:"Internet & Email",color:"#06B6D4",
+   q:"MIME type किसलिए use होता है?",
+   opts:["Email mime करने के लिए","Browser/server को file का type बताने के लिए — कैसे handle करें","File compress करने के लिए","File encrypt करने के लिए"],ans:1,
+   exp:["Email mime — MIME originally email attachments के लिए था।","✅ MIME (Multipurpose Internet Mail Extensions) — File type indicate करता है। जैसे text/html, image/jpeg, application/json। Browser accordingly display करता है।","File compress — ZIP से।","File encrypt — Encryption tools से।"]},
+
+  {id:50,section:"Internet & Email",color:"#06B6D4",
+   q:"Network Topology में 'Star Topology' की मुख्य विशेषता है:",
+   opts:["All devices directly connected","सभी devices central hub/switch से connected — एक device fail हो तो others unaffected","Ring में connected","Bus में connected"],ans:1,
+   exp:["All directly connected — Mesh topology है।","✅ Star Topology — सभी devices एक central hub या switch से connect। एक device disconnect हो तो बाकी काम करते हैं। Most common office network।","Ring — Ring topology है।","Bus — Bus topology है।"]},
+
+  // ===== HTML & CSS (51–62) =====
+  {id:51,section:"HTML & CSS",color:"#F97316",
+   q:"HTML में 'template' element किसलिए use होता है?",
+   opts:["Page template के लिए","Inert HTML content जो page load पर render नहीं होता — JavaScript से clone करके use होता है","CSS template के लिए","Image template के लिए"],ans:1,
+   exp:["Page template — CSS framework templates अलग।","✅ <template> — Browser parse करता है लेकिन render नहीं। JavaScript से content.cloneNode(true) से DOM में insert। Dynamic content के लिए।","CSS template — CSS variables से।","Image template — img tag से।"]},
+
+  {id:52,section:"HTML & CSS",color:"#F97316",
+   q:"CSS में 'isolation: isolate' property किसलिए use होती है?",
+   opts:["Element को delete करने के लिए","New stacking context create करने के लिए mix-blend-mode को contain करना","Element hide करने के लिए","Element को move करने के लिए"],ans:1,
+   exp:["Element delete — display:none से।","✅ isolation: isolate — Element के लिए new stacking context बनाती है। mix-blend-mode केवल उस container में apply होता है, parent को affect नहीं करता।","Element hide — visibility:hidden से।","Element move — transform से।"]},
+
+  {id:53,section:"HTML & CSS",color:"#F97316",
+   q:"HTML में 'slot' element (Web Components) किसलिए use होता है?",
+   opts:["Time slot के लिए","Shadow DOM में placeholder जहाँ light DOM content insert हो","Form slot के लिए","Image slot के लिए"],ans:1,
+   exp:["Time slot — Calendar concept।","✅ <slot> — Web Components में Shadow DOM के अंदर placeholder। Custom element use करते समय light DOM का content इस slot में inject होता है।","Form slot — Form fields अलग।","Image slot — img tag से।"]},
+
+  {id:54,section:"HTML & CSS",color:"#F97316",
+   q:"CSS में 'scroll-behavior: smooth' किसलिए use होती है?",
+   opts:["Page scroll disable करने के लिए","Anchor links click पर page smooth scroll करे — abrupt jump की जगह","Scroll bar hide करने के लिए","Scroll speed बढ़ाने के लिए"],ans:1,
+   exp:["Scroll disable — overflow:hidden से।","✅ scroll-behavior: smooth — html { scroll-behavior: smooth } set करने पर anchor (#section) click पर smooth animated scroll होता है।","Scroll bar hide — ::-webkit-scrollbar से।","Scroll speed — scroll-behavior animation speed अलग।"]},
+
+  {id:55,section:"HTML & CSS",color:"#F97316",
+   q:"CSS में 'writing-mode' property किसलिए use होती है?",
+   opts:["Font change करने के लिए","Text direction — horizontal, vertical (Japanese/Chinese) set करने के लिए","Color change करने के लिए","Size change करने के लिए"],ans:1,
+   exp:["Font change — font-family से।","✅ writing-mode — horizontal-tb (default), vertical-rl, vertical-lr। Japanese, Chinese text के लिए vertical writing। Creative designs में भी।","Color change — color से।","Size change — font-size से।"]},
+
+  {id:56,section:"HTML & CSS",color:"#F97316",
+   q:"HTML में 'rel=preload' किसलिए use होता है?",
+   opts:["Link reload करने के लिए","Critical resources (fonts, images, scripts) को browser में high priority से preload करने के लिए","Link delete करने के लिए","Link को new tab में खोलने के लिए"],ans:1,
+   exp:["Link reload — F5 से।","✅ <link rel='preload' href='font.woff2' as='font'> — Browser को hint देता है कि यह resource जल्दी चाहिए। Page render block नहीं होता।","Link delete — Element remove से।","New tab — target='_blank' से।"]},
+
+  {id:57,section:"HTML & CSS",color:"#F97316",
+   q:"CSS में 'contain' property किसलिए use होती है?",
+   opts:["Container बनाने के लिए","Browser को hint देना कि element के changes outside affect नहीं करेंगे — performance","Color contain करने के लिए","Font contain करने के लिए"],ans:1,
+   exp:["Container — div/section container बनाते हैं।","✅ contain: layout paint — Browser को बताता है कि इस element के अंदर changes बाकी page को affect नहीं करेंगे। Rendering optimize होती है।","Color — color property से।","Font — font-family से।"]},
+
+  {id:58,section:"HTML & CSS",color:"#F97316",
+   q:"HTML में 'ping' attribute <a> tag में क्या करता है?",
+   opts:["Network ping करता है","Link click होने पर specified URLs को POST request भेजता है (analytics)","Speed test करता है","Security check करता है"],ans:1,
+   exp:["Network ping — Command line tool है।","✅ ping attribute — <a href='...' ping='https://analytics.com'> — User link click करे तो analytics URL पर automatically request जाती है।","Speed test — Network tools से।","Security check — Server-side।"]},
+
+  {id:59,section:"HTML & CSS",color:"#F97316",
+   q:"CSS में 'shape-outside' property किसलिए use होती है?",
+   opts:["Element को round करने के लिए","Float element के around text flow को custom shape में wrap करने के लिए","Border shape के लिए","Background shape के लिए"],ans:1,
+   exp:["Element round — border-radius से।","✅ shape-outside — Float element के around text किसी specific shape (circle, polygon) के according flow करता है। Creative magazine-style layouts।","Border shape — border-radius से।","Background shape — clip-path से।"]},
+
+  {id:60,section:"HTML & CSS",color:"#F97316",
+   q:"HTML में 'enterkeyhint' attribute किसलिए use होता है?",
+   opts:["Enter key disable करने के लिए","Mobile keyboard पर Enter key का label (Go, Search, Send) customize करने के लिए","Form submit करने के लिए","Input type बदलने के लिए"],ans:1,
+   exp:["Enter disable — JavaScript से।","✅ enterkeyhint='search/send/go/done/next' — Mobile virtual keyboard का Enter button का label/icon change होता है। UX improve होती है।","Form submit — type='submit' से।","Input type — type attribute से।"]},
+
+  {id:61,section:"HTML & CSS",color:"#F97316",
+   q:"CSS में '@layer' rule किसलिए use होता है?",
+   opts:["Layer add करने के लिए","Cascade layers define करना — specificity conflicts manage करने के लिए","Color layer के लिए","Font layer के लिए"],ans:1,
+   exp:["Layer add — z-index से।","✅ @layer — CSS cascade को organize करता है। Libraries, utilities, components के बीच specificity conflicts बिना !important के manage होते हैं।","Color layer — color property से।","Font layer — font-family से।"]},
+
+  {id:62,section:"HTML & CSS",color:"#F97316",
+   q:"HTML में 'inert' attribute क्या करता है?",
+   opts:["Element को fast बनाता है","Element और उसके children को completely non-interactive बनाता है — focus, click, screen reader भी ignore","Element delete करता है","Element hide करता है"],ans:1,
+   exp:["Element fast — Performance optimization अलग।","✅ inert — Element visually दिखता है लेकिन click, focus, Tab navigation, screen reader सब ignore करता है। Modal open होने पर background inert।","Element delete — display:none से।","Element hide — visibility:hidden से।"]},
+
+  // ===== JAVASCRIPT (63–67) =====
+  {id:63,section:"JavaScript",color:"#EAB308",
+   q:"JavaScript में 'Symbol' data type किसलिए use होता है?",
+   opts:["Math symbols के लिए","Unique और immutable identifier बनाने के लिए — property keys में collision avoid करना","Special characters के लिए","Emoji के लिए"],ans:1,
+   exp:["Math symbols — Math library से।","✅ Symbol() — हर call unique value देता है। Object properties में third-party code से collision avoid। Well-known symbols जैसे Symbol.iterator।","Special characters — String से।","Emoji — String/Unicode से।"]},
+
+  {id:64,section:"JavaScript",color:"#EAB308",
+   q:"JavaScript में 'Proxy' object किसलिए use होता है?",
+   opts:["Network proxy के लिए","Object के fundamental operations (get, set, delete) को intercept और customize करने के लिए","Variable proxy के लिए","Function proxy के लिए"],ans:1,
+   exp:["Network proxy — Server-side है।","✅ Proxy — Object पर operations को intercept करता है। Validation, logging, caching, reactive frameworks (Vue.js) में use।","Variable proxy — Variable assignment direct।","Function proxy — Function.prototype.apply से।"]},
+
+  {id:65,section:"JavaScript",color:"#EAB308",
+   q:"JavaScript में 'Reflect' API किसलिए use होता है?",
+   opts:["Image reflect करने के लिए","Object operations को programmatically perform करने के लिए — Proxy के साथ","Array reflect करने के लिए","Function reflect करने के लिए"],ans:1,
+   exp:["Image reflect — CSS transform से।","✅ Reflect — Object operations (Reflect.get, Reflect.set, Reflect.apply) को functional style में perform करता है। Proxy handlers के अंदर default behavior call करने के लिए।","Array reflect — Array methods से।","Function reflect — Function.prototype से।"]},
+
+  {id:66,section:"JavaScript",color:"#EAB308",
+   q:"JavaScript में 'requestAnimationFrame' किसलिए use होता है?",
+   opts:["Frame बनाने के लिए","Browser के next repaint से पहले animation function call करने के लिए — smooth animations","Photo frame के लिए","Video frame के लिए"],ans:1,
+   exp:["Frame बनाना — CSS से।","✅ requestAnimationFrame(callback) — Browser अगली screen refresh (60fps = 16.7ms) से पहले callback call करता है। setInterval से smoother animations।","Photo frame — CSS border से।","Video frame — Video API से।"]},
+
+  {id:67,section:"JavaScript",color:"#EAB308",
+   q:"JavaScript में 'MutationObserver' किसलिए use होता है?",
+   opts:["Data mutation के लिए","DOM changes (added/removed nodes, attribute changes) को asynchronously observe करने के लिए","Variable changes के लिए","Array changes के लिए"],ans:1,
+   exp:["Data mutation — Database mutations अलग।","✅ MutationObserver — DOM tree में changes (node added/removed, attributes changed, text changed) detect करता है। Third-party content monitoring के लिए।","Variable changes — Proxy से।","Array changes — Proxy/setter से।"]},
+
+  // ===== CYBER SECURITY (68–75) =====
+  {id:68,section:"Cyber Security",color:"#DC2626",
+   q:"SIEM क्या है?",
+   opts:["Social media platform","Security Information and Event Management — logs collect और analyze करके threats detect करना","Email service","Cloud storage"],ans:1,
+   exp:["Social media — SIEM security tool है।","✅ SIEM — Multiple sources से security logs collect, correlate, और analyze करके real-time threats detect करता है। Splunk, IBM QRadar examples।","Email service — Gmail, Outlook अलग।","Cloud storage — Drive, S3 अलग।"]},
+
+  {id:69,section:"Cyber Security",color:"#DC2626",
+   q:"Supply Chain Attack क्या है?",
+   opts:["Shopping supply attack","Trusted software/hardware vendor को compromise करके उनके customers को attack करना","Network supply attack","Data supply attack"],ans:1,
+   exp:["Shopping supply — E-commerce concept।","✅ Supply Chain Attack — SolarWinds जैसा। Attacker trusted software update में malware inject करता है। Millions of users automatically affected।","Network supply — DDoS अलग।","Data supply — Data breach अलग।"]},
+
+  {id:70,section:"Cyber Security",color:"#DC2626",
+   q:"Fuzzing (Fuzz Testing) क्या है?",
+   opts:["Graphics fuzzy करना","Random/malformed inputs से software vulnerabilities ढूँढने की testing technique","Network testing","Password testing"],ans:1,
+   exp:["Graphics — Image processing अलग।","✅ Fuzzing — Automated testing जिसमें program को random, unexpected, invalid inputs दिए जाते हैं। Crashes और vulnerabilities reveal होती हैं।","Network testing — Network scanning अलग।","Password testing — Password cracking अलग।"]},
+
+  {id:71,section:"Cyber Security",color:"#DC2626",
+   q:"Threat Intelligence क्या है?",
+   opts:["AI intelligence","Cyber threats के बारे में actionable information — who, what, how attacks होते हैं","Business intelligence","Market intelligence"],ans:1,
+   exp:["AI intelligence — Machine learning अलग।","✅ Threat Intelligence — Known threat actors, attack vectors, IOCs (Indicators of Compromise) की information। Proactive defense enable करती है।","Business intelligence — BI tools अलग।","Market intelligence — Marketing अलग।"]},
+
+  {id:72,section:"Cyber Security",color:"#DC2626",
+   q:"Air Gap security क्या है?",
+   opts:["Air conditioning","Computer को internet और external networks से completely physically disconnect करना","Air pressure testing","Network gap"],ans:1,
+   exp:["Air conditioning — HVAC अलग।","✅ Air Gap — Critical systems (nuclear, military) को internet से completely physically isolated रखना। USB/physical access ही possible।","Air pressure — Physical engineering।","Network gap — Firewall से।"]},
+
+  {id:73,section:"Cyber Security",color:"#DC2626",
+   q:"CSRF (Cross-Site Request Forgery) attack क्या है?",
+   opts:["Cross-country attack","Victim के browser को unknowingly authenticated requests उसके account से send करवाना","Cross-platform attack","Cross-file attack"],ans:1,
+   exp:["Cross-country — Geographical attack नहीं।","✅ CSRF — Victim logged-in रहते हुए malicious site visit करे तो वह site victim के browser से legitimate requests (money transfer, password change) भेज सकती है।","Cross-platform — Compatibility issue।","Cross-file — File access attack अलग।"]},
+
+  {id:74,section:"Cyber Security",color:"#DC2626",
+   q:"Cyber Kill Chain के कितने phases होते हैं?",
+   opts:["3","5","7","10"],ans:2,
+   exp:["3 — कम है।","5 — कम है।","✅ 7 phases — Reconnaissance, Weaponization, Delivery, Exploitation, Installation, Command & Control, Actions on Objectives।","10 — ज्यादा है।"]},
+
+  {id:75,section:"Cyber Security",color:"#DC2626",
+   q:"PCI DSS किस industry के लिए security standard है?",
+   opts:["Healthcare","Payment Card Industry — credit/debit card data की security के लिए","Education","Government"],ans:1,
+   exp:["Healthcare — HIPAA healthcare के लिए है।","✅ PCI DSS (Payment Card Industry Data Security Standard) — Visa, Mastercard जैसे card data handle करने वाली companies के लिए mandatory security standard।","Education — FERPA education के लिए।","Government — FISMA government के लिए।"]},
+
+  // ===== CLOUD COMPUTING (76–80) =====
+  {id:76,section:"Cloud Computing",color:"#6366F1",
+   q:"Cloud में 'Object Storage' का example है:",
+   opts:["Traditional hard disk","Amazon S3, Google Cloud Storage — unstructured data files बड़े scale पर store करना","Relational database","Block storage"],ans:1,
+   exp:["Traditional hard disk — Block storage है।","✅ Object Storage — Files को objects के रूप में store। Amazon S3, Google Cloud Storage, Azure Blob। Infinite scalability, HTTP API access।","Relational database — RDS, MySQL अलग।","Block storage — EBS, SAN अलग।"]},
+
+  {id:77,section:"Cloud Computing",color:"#6366F1",
+   q:"Service Mesh किसलिए use होता है?",
+   opts:["Network cable के लिए","Microservices के बीच communication, security, observability manage करने के लिए","Database के लिए","Email के लिए"],ans:1,
+   exp:["Network cable — Physical network।","✅ Service Mesh (Istio, Linkerd) — Microservices architecture में services के बीच traffic management, mTLS security, load balancing, circuit breaking।","Database — Database services अलग।","Email — Mail services अलग।"]},
+
+  {id:78,section:"Cloud Computing",color:"#6366F1",
+   q:"FinOps क्या है?",
+   opts:["Financial software","Cloud spending को optimize करने की practice — cost visibility और accountability","Finance department","Banking cloud"],ans:1,
+   exp:["Financial software — ERP systems अलग।","✅ FinOps (Financial Operations) — Cloud costs को track, optimize, और control करना। Engineering, Finance, Business teams collaborate करती हैं।","Finance department — Corporate finance अलग।","Banking cloud — Banking applications अलग।"]},
+
+  {id:79,section:"Cloud Computing",color:"#6366F1",
+   q:"Chaos Engineering क्या है?",
+   opts:["System को damage करना","Intentionally failures introduce करके system की resilience test करना","Random programming","Unplanned maintenance"],ans:1,
+   exp:["System damage — Destructive testing नहीं।","✅ Chaos Engineering — Netflix का Chaos Monkey जैसे। Production में controlled failures inject करके देखते हैं system कैसे respond करता है। Resilience improve होती है।","Random programming — Software development practice।","Unplanned maintenance — Incidents अलग।"]},
+
+  {id:80,section:"Cloud Computing",color:"#6366F1",
+   q:"GitOps क्या है?",
+   opts:["Git का new version","Infrastructure और application deployment को Git repository को source of truth मानकर manage करना","Git tutorial","GitHub feature"],ans:1,
+   exp:["Git new version — Git versions अलग।","✅ GitOps — Git repository में changes = automatic deployment। ArgoCD, Flux जैसे tools। Declarative infrastructure, version control, audit trail।","Git tutorial — Learning resource।","GitHub feature — GitOps concept है।"]},
+
+  // ===== E-COMMERCE (81–85) =====
+  {id:81,section:"E-Commerce",color:"#14B8A6",
+   q:"Dark Pattern (UI) क्या है?",
+   opts:["Dark theme website","Deceptive UI design जो users को unintended actions करवाए","Night mode","Dark color scheme"],ans:1,
+   exp:["Dark theme — UI color preference।","✅ Dark Pattern — Deliberately confusing UI जो users को accidentally subscribe, buy, या share करवाए। जैसे hidden unsubscribe, forced continuity।","Night mode — Display settings।","Dark color scheme — Design choice।"]},
+
+  {id:82,section:"E-Commerce",color:"#14B8A6",
+   q:"Subscription Box Model E-Commerce में क्या है?",
+   opts:["One-time purchase","Regular intervals पर curated products box deliver करना — recurring revenue","Gift box","Storage box"],ans:1,
+   exp:["One-time purchase — Traditional e-commerce।","✅ Subscription Box — Monthly/quarterly curated products automatically deliver। FabBag, Amazon Subscribe & Save। Predictable recurring revenue।","Gift box — One-time gift।","Storage box — Physical product।"]},
+
+  {id:83,section:"E-Commerce",color:"#14B8A6",
+   q:"Net Promoter Score (NPS) क्या measure करता है?",
+   opts:["Net profit","Customer loyalty — कितने customers product recommend करेंगे","Network speed","Product score"],ans:1,
+   exp:["Net profit — Financial metric अलग।","✅ NPS — 'आप हमें 0-10 में recommend करेंगे?' Promoters (9-10) - Detractors (0-6) = NPS। Customer satisfaction का key metric।","Network speed — Bandwidth measure।","Product score — Product rating अलग।"]},
+
+  {id:84,section:"E-Commerce",color:"#14B8A6",
+   q:"Headless Commerce क्या है?",
+   opts:["Website without header","Frontend (presentation) और backend (commerce engine) को decouple करना","Product without image","Store without name"],ans:1,
+   exp:["Website without header — CSS layout concept।","✅ Headless Commerce — Backend commerce logic (inventory, payments, orders) को frontend से API के through decouple। Any frontend (React, mobile app) use हो सकता है।","Product without image — Missing media।","Store without name — Unnamed store।"]},
+
+  {id:85,section:"E-Commerce",color:"#14B8A6",
+   q:"Social Commerce क्या है?",
+   opts:["Social networking","Social media platforms पर directly products discover और purchase करना","Social events","Social media marketing"],ans:1,
+   exp:["Social networking — Facebook, Instagram social networks।","✅ Social Commerce — Instagram Shopping, Facebook Marketplace, Pinterest Buyable Pins। Social media पर directly purchase।","Social events — Event planning अलग।","Social media marketing — Marketing strategy अलग।"]},
+
+  // ===== PYTHON (86–93) =====
+  {id:86,section:"Python Programming",color:"#A855F7",
+   q:"Python में 'dataclass' decorator किसलिए use होता है?",
+   opts:["Data delete करने के लिए","Automatically __init__, __repr__, __eq__ generate करने वाली class के लिए","Data sort करने के लिए","Data filter करने के लिए"],ans:1,
+   exp:["Data delete — del से।","✅ @dataclass — class में __init__, __repr__, __eq__ automatically generate होते हैं। Boilerplate code कम होता है। Python 3.7+।","Data sort — sorted() से।","Data filter — filter() से।"]},
+
+  {id:87,section:"Python Programming",color:"#A855F7",
+   q:"Python में 'contextlib' module किसलिए use होता है?",
+   opts:["Context menu के लिए","Context managers easily create करने के लिए — @contextmanager decorator","Text context के लिए","UI context के लिए"],ans:1,
+   exp:["Context menu — UI/OS context menu।","✅ contextlib.contextmanager decorator — with statement के लिए custom context manager बिना class लिखे। @contextmanager से generator-based context manager।","Text context — String operations से।","UI context — GUI frameworks से।"]},
+
+  {id:88,section:"Python Programming",color:"#A855F7",
+   q:"Python में 'asyncio' किसलिए use होता है?",
+   opts:["Synchronous programming के लिए","Asynchronous I/O operations (network, files) को efficiently handle करने के लिए","Graphics के लिए","Database के लिए"],ans:1,
+   exp:["Synchronous — Regular Python synchronous है।","✅ asyncio — Concurrent I/O bound operations। async def, await keywords से। Single thread में multiple I/O operations efficiently handle।","Graphics — Pygame, Tkinter से।","Database — SQLAlchemy से।"]},
+
+  {id:89,section:"Python Programming",color:"#A855F7",
+   q:"Python में '__slots__' किसलिए use होता है?",
+   opts:["Time slots के लिए","Memory optimize करना — dynamic __dict__ की जगह fixed attributes define करना","Date slots के लिए","Network slots के लिए"],ans:1,
+   exp:["Time slots — Calendar concept।","✅ __slots__ = ['x','y'] — Class instances में dynamic __dict__ नहीं बनता। Memory usage कम होती है। Large number of objects बनाने में significant saving।","Date slots — Datetime module से।","Network slots — Network programming से।"]},
+
+  {id:90,section:"Python Programming",color:"#A855F7",
+   q:"Python में 'namedtuple' किसलिए use होता है?",
+   opts:["Regular tuple की तरह","Tuple जिसके elements को index और name दोनों से access कर सकते हैं","Named list के लिए","Named dictionary के लिए"],ans:1,
+   exp:["Regular tuple — Regular () tuple।","✅ namedtuple — collections.namedtuple। point.x, point.y जैसे access। Tuple की immutability + meaningful field names।","Named list — List names अलग।","Named dictionary — Regular dict से।"]},
+
+  {id:91,section:"Python Programming",color:"#A855F7",
+   q:"Python में 'functools.lru_cache' किसलिए use होता है?",
+   opts:["Function delete करने के लिए","Function results को cache करके repeated calls में speed improve करना (memoization)","Function sort करने के लिए","Function filter करने के लिए"],ans:1,
+   exp:["Function delete — del से।","✅ @lru_cache(maxsize=128) — Function के results cache होते हैं। Same arguments से दोबारा call पर cached result return, recalculate नहीं। Fibonacci जैसे recursive functions में बहुत useful।","Function sort — sorted() से।","Function filter — filter() से।"]},
+
+  {id:92,section:"Python Programming",color:"#A855F7",
+   q:"Python में 'typing' module किसलिए use होता है?",
+   opts:["Text typing के लिए","Type hints/annotations — code readability और static analysis के लिए","Keyboard typing के लिए","Speed typing के लिए"],ans:1,
+   exp:["Text typing — String operations से।","✅ typing module — List[int], Dict[str,int], Optional[str] जैसे type hints। Runtime पर enforce नहीं होते but IDEs और mypy type checking करते हैं।","Keyboard typing — Input handling।","Speed typing — Performance optimization।"]},
+
+  {id:93,section:"Python Programming",color:"#A855F7",
+   q:"Python में 'subprocess' module किसलिए use होता है?",
+   opts:["Sub-process theory के लिए","System commands और external programs Python से execute करने के लिए","Sub-class बनाने के लिए","Sub-routine के लिए"],ans:1,
+   exp:["Sub-process theory — CS concept।","✅ subprocess — Python से shell commands run करना। subprocess.run(['ls','-la']) जैसे। Output capture, error handle, child process manage।","Sub-class — class inheritance से।","Sub-routine — Functions/methods से।"]},
+
+  // ===== ADVANCED EXCEL (94–100) =====
+  {id:94,section:"Advanced Excel",color:"#059669",
+   q:"Excel में PIVOTBY function किसलिए use होता है?",
+   opts:["Pivot Table delete करने के लिए","Formula-based grouping और aggregation — Pivot Table को formula में करना","Chart बनाने के लिए","Data sort करने के लिए"],ans:1,
+   exp:["Pivot Table delete — Right-click से।","✅ PIVOTBY() — Microsoft 365 नया function। Formula से Pivot Table जैसी summary बनाता है। Rows, columns, values, aggregation function specify होते हैं।","Chart — Insert से।","Data sort — SORT() से।"]},
+
+  {id:95,section:"Advanced Excel",color:"#059669",
+   q:"Excel में GROUPBY function क्या करता है?",
+   opts:["Data delete करता है","एक dimension पर group करके aggregate करता है (PIVOTBY का simplified version)","Data filter करता है","Data sort करता है"],ans:1,
+   exp:["Data delete — Delete से।","✅ GROUPBY() — Microsoft 365। PIVOTBY से simpler — एक column group करके sum/count/average। जैसे sales by region।","Data filter — FILTER() से।","Data sort — SORT() से।"]},
+
+  {id:96,section:"Advanced Excel",color:"#059669",
+   q:"Excel में VSTACK और HSTACK functions क्या करते हैं?",
+   opts:["Data delete करते हैं","Arrays को vertically (VSTACK) या horizontally (HSTACK) combine करते हैं","Data sort करते हैं","Charts बनाते हैं"],ans:1,
+   exp:["Data delete — Delete से।","✅ VSTACK — Arrays को ऊपर-नीचे stack करता है। HSTACK — Arrays को side-by-side combine करता है। Multiple ranges एक में combine।","Data sort — SORT() से।","Charts — Insert से।"]},
+
+  {id:97,section:"Advanced Excel",color:"#059669",
+   q:"Excel में TOROW और TOCOL functions क्या करते हैं?",
+   opts:["Rows और columns delete करते हैं","2D array को single row (TOROW) या single column (TOCOL) में convert करते हैं","Data sort करते हैं","Data filter करते हैं"],ans:1,
+   exp:["Delete — Delete से।","✅ TOROW(array) — Multi-row/column array को एक single row में। TOCOL(array) — एक single column में। Data reshaping के लिए।","Data sort — SORT() से।","Data filter — FILTER() से।"]},
+
+  {id:98,section:"Advanced Excel",color:"#059669",
+   q:"Excel में WRAPROWS और WRAPCOLS functions क्या करते हैं?",
+   opts:["Text wrap करते हैं","1D array को specified size के 2D array में wrap करते हैं","Data delete करते हैं","Data sort करते हैं"],ans:1,
+   exp:["Text wrap — Wrap Text cell formatting से।","✅ WRAPROWS(vector, wrap_count) — Single row/column को specified number of columns/rows में wrap करके 2D array बनाता है।","Data delete — Delete से।","Data sort — SORT() से।"]},
+
+  {id:99,section:"Advanced Excel",color:"#059669",
+   q:"Excel में TEXTSPLIT function क्या करता है?",
+   opts:["Text delete करता है","Text को delimiter से split करके array में return करता है","Text sort करता है","Text format करता है"],ans:1,
+   exp:["Text delete — Delete से।","✅ TEXTSPLIT(text, col_delimiter, row_delimiter) — Text को comma, space जैसे delimiters से split करके array में return। Dynamic spill होता है।","Text sort — SORT() से।","Text format — TEXT() से।"]},
+
+  {id:100,section:"Advanced Excel",color:"#059669",
+   q:"Excel में TEXTAFTER और TEXTBEFORE functions क्या करते हैं?",
+   opts:["Text delete करते हैं","Specified delimiter के before (TEXTBEFORE) या after (TEXTAFTER) का text extract करते हैं","Text sort करते हैं","Text count करते हैं"],ans:1,
+   exp:["Text delete — Delete से।","✅ TEXTBEFORE('Hello World','o') = 'Hell'। TEXTAFTER('Hello World','o') = ' World'। MID/FIND combinations को replace करता है।","Text sort — SORT() से।","Text count — LEN() से।"]}
+];
+
+let current=0,score=0,selected=null,results=[],reviewVisible=false;
+
+function startQuiz(){
+  document.getElementById('startScreen').style.display='none';
+  const qs=document.getElementById('quizScreen');
+  qs.style.display='flex';qs.style.flexDirection='column';qs.style.alignItems='center';qs.style.gap='14px';qs.style.width='100%';
+  renderQuestion();
+}
+
+function renderQuestion(){
+  const q=QUESTIONS[current];
+  document.getElementById('qCounter').textContent=`${current+1}/100`;
+  document.getElementById('scoreDisplay').textContent=score;
+  document.getElementById('progressBar').style.width=`${(current/100)*100}%`;
+  document.getElementById('progressBar').style.background=`linear-gradient(90deg,${q.color},${q.color}88)`;
+  const pill=document.getElementById('sectionPill');
+  pill.textContent=q.section;pill.style.background=q.color+'22';pill.style.color=q.color;pill.style.border=`1px solid ${q.color}55`;
+  document.getElementById('qNumBadge').textContent=`Q${q.id} of 100`;
+  document.getElementById('mainCard').style.borderColor=q.color+'44';
+  document.getElementById('questionText').textContent=q.q;
+  const c=document.getElementById('optionsContainer');c.innerHTML='';
+  q.opts.forEach((opt,idx)=>{
+    const btn=document.createElement('button');btn.className='opt-btn';btn.onclick=()=>handleSelect(idx);
+    btn.innerHTML=`<span class="opt-label">${String.fromCharCode(65+idx)}</span><span class="opt-text">${opt}</span>`;
+    c.appendChild(btn);
+  });
+  document.getElementById('expBox').style.display='none';
+  document.getElementById('nextBtn').style.display='none';
+  document.getElementById('aiExpBox').style.display='none';
+  document.getElementById('aiLoader').style.display='flex';
+  document.getElementById('aiExpText').style.display='none';
+  document.getElementById('localExplanations').innerHTML='';
+  selected=null;
+}
+
+async function handleSelect(idx){
+  if(selected!==null)return;
+  selected=idx;
+  const q=QUESTIONS[current];
+  const correct=idx===q.ans;
+  if(correct)score++;
+  results.push({qIndex:current,selected:idx,correct});
+  document.getElementById('scoreDisplay').textContent=score;
+  const btns=document.querySelectorAll('.opt-btn');
+  btns.forEach((btn,i)=>{
+    btn.classList.add('answered');btn.onclick=null;
+    const lbl=btn.querySelector('.opt-label');
+    if(i===q.ans){btn.classList.add('correct');lbl.classList.add('correct-lbl');btn.innerHTML+='<span class="opt-icon">✔</span>';}
+    else if(i===idx&&i!==q.ans){btn.classList.add('wrong');lbl.classList.add('wrong-lbl');btn.innerHTML+='<span class="opt-icon">✘</span>';}
+    else{btn.classList.add('neutral-after');}
+  });
+  const ld=document.getElementById('localExplanations');
+  q.exp.forEach((et,i)=>{
+    const isC=i===q.ans,isW=i===idx&&i!==q.ans;
+    const div=document.createElement('div');
+    div.className='exp-option'+(isC?' correct-exp':isW?' wrong-exp':'');
+    div.innerHTML=`<div class="exp-option-header"><span class="exp-lbl ${isC?'correct-lbl':isW?'wrong-lbl':''}">${String.fromCharCode(65+i)}</span><div><div class="exp-opt-name ${isC?'correct-name':isW?'wrong-name':''}">${q.opts[i]}</div><div class="exp-opt-text">${et}</div></div></div>`;
+    ld.appendChild(div);
+  });
+  document.getElementById('expBox').style.display='block';
+  document.getElementById('aiExpBox').style.display='block';
+  try{
+    const res=await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:300,
+        tools:[{type:"web_search_20250305",name:"web_search"}],
+        messages:[{role:"user",content:`COPA exam ke liye "${q.section}" topic ka yeh question hai: "${q.q}"\nSahi jawab hai: "${q.opts[q.ans]}"\n2-3 lines mein is concept ki important details batao Hindi mein jo exam mein kaam aaye. Short rakho.`}]
+      })
+    });
+    const data=await res.json();
+    const text=data.content?.filter(b=>b.type==="text").map(b=>b.text).join("")||"";
+    if(text){document.getElementById('aiLoader').style.display='none';const t=document.getElementById('aiExpText');t.textContent=text;t.style.display='block';}
+  }catch(e){document.getElementById('aiLoader').style.display='none';const t=document.getElementById('aiExpText');t.textContent="इंटरनेट कनेक्शन की जरूरत है।";t.style.display='block';}
+  const nb=document.getElementById('nextBtn');
+  nb.style.display='block';nb.textContent=current+1===100?'🏁 परिणाम देखें':'अगला प्रश्न →';
+}
+
+function nextQuestion(){
+  if(current+1>=100){showResults();return;}
+  current++;renderQuestion();window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function showResults(){
+  document.getElementById('quizScreen').style.display='none';
+  document.getElementById('resultScreen').style.display='flex';
+  const pct=Math.round((score/100)*100);
+  document.getElementById('resultEmoji').textContent=pct>=80?'🎉':pct>=60?'😊':'💪';
+  document.getElementById('resultGrade').textContent=pct>=80?'उत्कृष्ट! 🏆':pct>=60?'अच्छा! 👍':'और पढ़ाई करो! 📚';
+  document.getElementById('resultGrade').style.color=pct>=80?'#10B981':pct>=60?'#F59E0B':'#EF4444';
+  document.getElementById('resultScore').innerHTML=`${score}<span>/100</span>`;
+}
+
+function restartQuiz(){
+  current=0;score=0;selected=null;results=[];reviewVisible=false;
+  document.getElementById('resultScreen').style.display='none';
+  document.getElementById('reviewList').style.display='none';
+  const qs=document.getElementById('quizScreen');qs.style.display='flex';
+  renderQuestion();window.scrollTo({top:0});
+}
+
+function toggleReview(){
+  reviewVisible=!reviewVisible;
+  const list=document.getElementById('reviewList');
+  if(reviewVisible){
+    list.innerHTML='';
+    results.forEach(r=>{
+      const q=QUESTIONS[r.qIndex],div=document.createElement('div');
+      div.className='review-item';
+      div.innerHTML=`<span class="review-icon" style="color:${r.correct?'#10B981':'#EF4444'}">${r.correct?'✔':'✘'}</span><span class="review-text">Q${q.id}: ${q.q.substring(0,50)}...${!r.correct?`<span class="review-correct">सही उत्तर: ${q.opts[q.ans]}</span>`:''}</span>`;
+      list.appendChild(div);
+    });
+    list.style.display='block';
+  }else{list.style.display='none';}
+}
+</script>
+</body>
+</html>
